@@ -4,6 +4,7 @@ using BankingCli.Ai;
 BankSession banking = new BankSession();
 
 IntentInterpreter? interpreter = null;
+ReplyWriter? replyWriter = null;
 try
 {
     AiSettings? settings = AiSettings.FromEnvironment();
@@ -14,7 +15,9 @@ try
     }
     else
     {
-        interpreter = new IntentInterpreter(new OpenAiCompatibleModel(new HttpClient(), settings));
+        var model = new OpenAiCompatibleModel(new HttpClient(), settings);
+        interpreter = new IntentInterpreter(model);
+        replyWriter = new ReplyWriter(model);
     }
 }
 catch (AiException ex)
@@ -22,7 +25,11 @@ catch (AiException ex)
     Console.Error.WriteLine($"Plain-English mode is off: {ex.Message}");
 }
 
-BankAssistant assistant = new BankAssistant(banking, interpreter, Console.Error);
+// Set SHOW_BANK_LINE=1 to also print the bank's own result under each friendly reply.
+string? showLine = Environment.GetEnvironmentVariable("SHOW_BANK_LINE");
+bool showBankLine = showLine == "1" || string.Equals(showLine, "true", StringComparison.OrdinalIgnoreCase);
+
+BankAssistant assistant = new BankAssistant(banking, interpreter, Console.Error, replyWriter, showBankLine);
 
 while (true)
 {

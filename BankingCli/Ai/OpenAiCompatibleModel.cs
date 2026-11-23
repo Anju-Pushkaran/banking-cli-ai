@@ -46,7 +46,7 @@ internal sealed class OpenAiCompatibleModel : ILanguageModel
             using HttpResponseMessage response = await http.SendAsync(request, timeout.Token);
             if (!response.IsSuccessStatusCode)
             {
-                // Only the status code. The body could echo things we don't want to show.
+                // Only the status code is reported. The response body could echo sensitive details.
                 throw new AiException($"The AI service returned HTTP {(int)response.StatusCode}.");
             }
 

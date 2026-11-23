@@ -1,6 +1,6 @@
 namespace BankingCli;
 
-// Decides whether a line is an original command (goes straight to the bank) or plain English (goes to the AI).
+// Decides if a line is an original command (bank) or plain English (AI).
 internal static class InputRouter
 {
     public static bool IsOriginalCommand(string input)
@@ -11,9 +11,9 @@ internal static class InputRouter
             return true; // blank line, the bank ignores it
         }
 
-        // Account slots must hold a real account name. That's what separates
-        // "deposit savings 10" (command) from "deposit 20 dollars" (English).
-        // A bad amount like "deposit savings abc" still counts as a command, so it gets the same error as before.
+        // The account spot must hold a real account name.
+        // That's how "deposit savings 10" (command) differs from "deposit 20 dollars" (English).
+        // "deposit savings abc" is still a command, so the bank gives its usual error.
         return tokens[0].ToLowerInvariant() switch
         {
             "help" or "?" or "exit" => tokens.Length == 1,

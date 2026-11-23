@@ -59,7 +59,7 @@ public class IntentInterpreterTests
     [Fact]
     public async Task Transfer_with_no_source_asks_and_does_not_guess()
     {
-        // "Transfer 10.20 to my savings account": we know the destination and amount, not the source.
+        // "Transfer 10.20 to my savings account": the destination and amount are given, the source is not.
         Interpretation result = await Run(Json("transfer", null, "savings", "10.20"));
 
         Assert.Equal(InterpretationKind.NeedsClarification, result.Kind);
@@ -199,7 +199,7 @@ public class IntentInterpreterTests
     [InlineData("going")]
     public async Task Ordinary_words_are_never_mistaken_for_a_misspelled_account(string word)
     {
-        // The AI "fixed" something silently, so we scan the customer's words. None of these should be suggested.
+        // The AI corrected something silently, so the customer's words are scanned. None of these should be suggested.
         Interpretation result = await Run(Json("deposit", "chequing", null, "100"), $"{word} 100 to my pal");
 
         Assert.DoesNotContain("Did you mean", result.Text);
@@ -240,7 +240,7 @@ public class IntentInterpreterTests
     {
         Interpretation result = await Run(Json("transfer"));
 
-        Assert.Contains("which account to take it from and which account to put it in and a clear amount", result.Text);
+        Assert.Contains("which account to take it from, which account to put it in and a clear amount", result.Text);
     }
 
     [Fact]

@@ -10,7 +10,7 @@ public class OpenAiCompatibleModelTests
     private static readonly AiSettings Settings =
         new(new Uri("https://example.test/v1/"), "test-model", "secret-key-123");
 
-    // Fake network: returns what we give it and remembers the request it got.
+    // Fake network: returns a preset response and records the request it received.
     private sealed class FakeHandler(Func<HttpRequestMessage, Task<HttpResponseMessage>> respond) : HttpMessageHandler
     {
         public HttpRequestMessage? LastRequest { get; private set; }

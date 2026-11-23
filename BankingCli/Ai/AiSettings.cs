@@ -19,7 +19,7 @@ internal sealed record AiSettings(Uri BaseUrl, string Model, string ApiKey)
         string baseUrl = NonEmpty(getVariable("AI_BASE_URL")) ?? DefaultBaseUrl;
         string model = NonEmpty(getVariable("AI_MODEL")) ?? DefaultModel;
 
-        // Trailing slash needed, otherwise the /v1 part gets dropped when we add chat/completions.
+        // The trailing slash keeps the /v1 part when chat/completions is appended.
         if (!Uri.TryCreate(baseUrl.TrimEnd('/') + "/", UriKind.Absolute, out Uri? uri) ||
             (uri.Scheme != Uri.UriSchemeHttps && uri.Scheme != Uri.UriSchemeHttp))
         {
